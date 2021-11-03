@@ -1,0 +1,8 @@
+---
+- name: ping to target
+  ping:
+  ignore_unreachable: true
+  register: ping
+
+- include_tasks: create_poweruser.yml
+  when: ping.unreachable is defined and ping.unreachable

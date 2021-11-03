@@ -1,0 +1,75 @@
+---
+# デフォルト値の ansible_user を利用する場合、 "set ansible_user" タスクを実行する前に値を代入して確定しておく。
+- name: ensure poweruser_name
+  set_fact:
+    poweruser_name: "{{ poweruser_name }}"
+
+# デフォルト値の ansible_ssh_pass または ansible_become_pass を利用する場合、 "set ansible_*" タスクを実行する前に値を代入して確定しておく。
+- name: ensure poweruser_password
+  set_fact:
+    poweruser_password: "{{ poweruser_password }}"
+
+- name: set ansible_user
+  set_fact:
+    ansible_user: "{{ poweruser_default_user }}"
+  when: poweruser_default_user is defined
+
+- name: set ansible_ssh_pass
+  set_fact:
+    ansible_ssh_pass: "{{ poweruser_default_ssh_pass }}"
+  when: poweruser_default_ssh_pass is defined
+
+- name: set ansible_ssh_private_key_file
+  set_fact:
+    ansible_ssh_private_key_file: "{{ poweruser_default_ssh_private_key_file }}"
+  when: poweruser_default_ssh_private_key_file is defined
+
+- name: set ansible_become_pass
+  set_fact:
+    ansible_become_pass: "{{ poweruser_default_become_pass }}"
+  when: poweruser_default_become_pass is defined
+
+- name: create group of poweruser
+  group:
+    name: "{{ poweruser_group }}"
+    gid: "{{ poweruser_gid | default(omit) }}"
+    state: present
+  become: true
+  when: poweruser_group is defined
+
+- name: create poweruser
+  user:
+    name: "{{ poweruser_name }}"
+    group: "{{ poweruser_group | default(omit) }}"
+    groups: "{{ poweruser_groups | default(omit) }}"
+    password: "{{ poweruser_password | password_hash('sha512') }}"
+    uid: "{{ poweruser_uid | default(omit) }}"
+    state: present
+  become: true
+  ignore_errors: "{{ ansible_check_mode and poweruser_group is defined }}"
+
+- name: update ansible_ssh_pass and ansible_become_pass if needed
+  set_fact:
+    ansible_ssh_pass: "{{ poweruser_password }}"
+    ansible_become_pass: "{{ poweruser_password }}"
+  when: ansible_user == poweruser_name
+
+- name: add authorized_keys
+  authorized_key:
+    user: "{{ poweruser_name }}"
+    key: "{{ item }}"
+  loop: "{{ poweruser_authorized_keys | list }}"
+  become: true
+  ignore_errors: "{{ ansible_check_mode }}"
+  when: poweruser_authorized_keys is defined
+
+- name: config sudoers
+  lineinfile:
+    path: "{{ poweruser_sudoers_file }}"
+    regexp: "^{{ poweruser_name }} "
+    line: "{{ poweruser_name }} ALL={{ '(ALL) NOPASSWD:' if poweruser_sudoers_nopasswd else '(ALL:ALL)' }} ALL"
+    validate: 'visudo -cf %s'
+    create: true
+    state: present
+  become: true
+  when: poweruser_sudoers_configure

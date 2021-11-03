@@ -1,0 +1,40 @@
+---
+# PowerUser のパラメータ。
+# PowerUser のユーザ名を指定します。
+poweruser_name: "{{ ansible_user }}"
+
+# PowerUser のプライマリグループを指定します。
+# poweruser_group: "{{ poweruser_name }}"
+
+# PowerUser のセカンダリグループをリストで指定します。
+# poweruser_groups: []
+
+# PowerUser のパスワードを指定します。
+poweruser_password: "{{ ansible_ssh_pass if ansible_ssh_pass is defined else ansible_become_pass }}"
+
+# PowerUser へのアクセスを許可する公開鍵をリストで指定します。
+# poweruser_authorized_keys: []
+
+# PowerUser の uid を指定します。
+# poweruser_uid: 100
+
+# PowerUser の gid を指定します。 poweruser_group を指定した場合のみ有効です。
+# poweruser_gid: 100
+
+
+# PowerUser を作成するために利用するユーザのパラメータ。
+# poweruser_default_user: pi
+# poweruser_default_ssh_pass: raspberry
+# poweruser_default_ssh_private_key_file: ~/.ssh/id_ed25519
+# poweruser_default_become_pass: raspberry
+
+
+# PowerUser に関する sudoers ファイルのパラメータ。
+# sudoers を設定するか否かを指定します。 true の場合は設定をします。
+poweruser_sudoers_configure: true
+
+# 設定する sudoers ファイルの名前を指定します。
+poweruser_sudoers_file: "/etc/sudoers.d/999_poweruser"
+
+# poweruser を NOPASSWD にするか否かを指定します。 true の場合は NOPASSWD として設定します。
+poweruser_sudoers_nopasswd: true
