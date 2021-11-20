@@ -1,4 +1,15 @@
 ---
+- name: backup facts
+  set_fact:
+    __org_ansible_user: "{{ ansible_user | default(omit) }}"
+    __org_ansible_ssh_pass: "{{ ansible_ssh_pass | default(omit) }}"
+    __org_ansible_ssh_private_key_file: "{{ ansible_ssh_private_key_file | default(omit) }}"
+    __org_ansible_become_pass: "{{ ansible_become_pass | default(omit) }}"
+  # check_mode でこの role が実行された場合、 poweruser_name で指定されたユーザは作成されない。
+  # このため、後続の role のチェックを成功させるために poweruser_default_user のユーザのまま処理を実行する必要があるので
+  # restore facts task を実行してはならなくなり、それによりこの backup facts task を実行する必要がなくなるのでスキップする。
+  when: not ansible_check_mode
+
 # デフォルト値の ansible_user を利用する場合、 "set ansible_user" タスクを実行する前に値を代入して確定しておく必要がある。
 - name: ensure poweruser_name
   set_fact:
@@ -73,3 +84,12 @@
     state: present
   become: true
   when: poweruser_sudoers_configure
+
+- name: restore facts
+  set_fact:
+    ansible_user: "{{ __org_ansible_user | default(omit) }}"
+    ansible_ssh_pass: "{{ __org_ansible_ssh_pass | default(omit) }}"
+    ansible_ssh_private_key_file: "{{ __org_ansible_ssh_private_key_file | default(omit) }}"
+    ansible_become_pass: "{{ __org_ansible_become_pass | default(omit) }}"
+  # backup facts task に記載のコメントと同様の理由により、 check_mode 時には restore facts task をスキップする。
+  when: not ansible_check_mode
