@@ -1,10 +1,10 @@
 ---
-# デフォルト値の ansible_user を利用する場合、 "set ansible_user" タスクを実行する前に値を代入して確定しておく。
+# デフォルト値の ansible_user を利用する場合、 "set ansible_user" タスクを実行する前に値を代入して確定しておく必要がある。
 - name: ensure poweruser_name
   set_fact:
     poweruser_name: "{{ poweruser_name }}"
 
-# デフォルト値の ansible_ssh_pass または ansible_become_pass を利用する場合、 "set ansible_*" タスクを実行する前に値を代入して確定しておく。
+# デフォルト値の ansible_ssh_pass または ansible_become_pass を利用する場合、 "set ansible_*" タスクを実行する前に値を代入して確定しておく必要がある。
 - name: ensure poweruser_password
   set_fact:
     poweruser_password: "{{ poweruser_password }}"
