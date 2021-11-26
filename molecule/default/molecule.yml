@@ -1,0 +1,29 @@
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest
+    privileged: true
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    groups:
+      - ${MOLECULE_DISTRO:-ubuntu2004}
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      all:
+        poweruser_name: molecule_power
+        poweruser_password: "molecule_password"
+        poweruser_default_user: "{{ ansible_user }}"
+        poweruser_default_ssh_pass: "{{ ansible_ssh_pass }}"
+
+verifier:
+  name: ansible
