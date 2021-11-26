@@ -30,6 +30,7 @@ None.
 
 ```yaml
 - hosts: all
+  gather_facts: false
   roles:
     - ktooi.poweruser
   vars:
@@ -38,6 +39,8 @@ None.
     power_default_ssh_pass: raspberry
     power_default_become_pass: raspberry
 ```
+
+※ `gather_facts` は `false` にする必要があります。対象ホストにログインができない場合には、 `gather_facts` を実行しても失敗するためです。
 
 ## Authors
 
