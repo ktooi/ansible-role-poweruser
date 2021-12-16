@@ -23,6 +23,10 @@ poweruser_password: "{{ ansible_ssh_pass if ansible_ssh_pass is defined else ans
 
 
 # PowerUser を作成するために利用するユーザのパラメータ。
+# Linux ディストリビューション毎にデフォルトで用意されているユーザや、
+# あなたやあなたのチームが予め作成する認証情報を指定します。
+# なお、この role は Gathering facts を使用してはならないので、
+# Linux ディストリビューションを自動的に判別させることはできません。
 # poweruser_default_user: pi
 # poweruser_default_ssh_pass: raspberry
 # poweruser_default_ssh_private_key_file: ~/.ssh/id_ed25519

@@ -21,12 +21,20 @@
 
 [defaults/main.yml](defaults/main.yml) を参照してください。
 
-
 ## Dependencies
 
 None.
 
 ## Example Playbook
+
+```
+[all]
+my_host.example.com
+
+[all:variables]
+ansible_user: my_poweruser
+ansible_ssh_pass: my_poweruser_password
+```
 
 ```yaml
 - hosts: all
@@ -41,6 +49,10 @@ None.
 ```
 
 ※ `gather_facts` は `false` にする必要があります。対象ホストにログインができない場合には、 `gather_facts` を実行しても失敗するためです。
+
+1. `my_poweruser` というユーザと `my_poweruser_password` というパスワードで `my_host.example.com` に接続します。
+2. `my_poweruser` というユーザが存在しない場合、 `power_default_*` の認証情報を利用して `my_poweruser` を作成します。上記例の場合は `pi` というユーザと `raspberry` というパスワードで `my_host.example.com` に接続し、 `my_poweruser` を作成します。
+3. 以降の Playbook では `my_poweruser` というユーザを利用して `my_host.example.com` に接続します。
 
 ## Authors
 
