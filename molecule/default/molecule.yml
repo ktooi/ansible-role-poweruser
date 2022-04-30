@@ -22,8 +22,8 @@ provisioner:
       all:
         poweruser_name: molecule_power
         poweruser_password: "molecule_password"
-        poweruser_default_user: "{{ ansible_user }}"
-        poweruser_default_ssh_pass: "{{ ansible_ssh_pass }}"
+        poweruser_default_user: "root"
+        poweruser_default_ssh_pass: ""
         ansible_user: "{{ poweruser_name }}"
         ansible_ssh_pass: "{{ poweruser_password }}"
 
