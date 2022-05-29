@@ -2,7 +2,9 @@
 
 # Ansible Role: poweruser
 
-`ansible_user` で Ansible が接続できない場合に、(ディストリビューションごとに設定されたり、チームや個人で決めた)デフォルトのユーザを利用して Ansible が利用するユーザを作成する role です。
+この role は、 Ansible が各サーバに接続するために利用するユーザ(`ansible_user`)を作成するための role です。
+
+`ansible_user` で Ansible が接続できない場合に、(ディストリビューションごとに設定されたり、チームや個人で決めた)デフォルトのユーザを利用して Ansible が利用するユーザを作成します。
 
 この role では次のことを行います。
 
@@ -21,12 +23,20 @@
 
 [defaults/main.yml](defaults/main.yml) を参照してください。
 
-
 ## Dependencies
 
 None.
 
 ## Example Playbook
+
+```
+[all]
+my_host.example.com
+
+[all:variables]
+ansible_user: my_poweruser
+ansible_ssh_pass: my_poweruser_password
+```
 
 ```yaml
 - hosts: all
@@ -40,7 +50,18 @@ None.
     power_default_become_pass: raspberry
 ```
 
-※ `gather_facts` は `false` にする必要があります。対象ホストにログインができない場合には、 `gather_facts` を実行しても失敗するためです。
+ポイント
+
+* `gather_facts` は `false` にする必要があります。対象ホストにログインができない場合には、 `gather_facts` を実行しても失敗するためです。
+* 例示している `power_default_*` の認証情報は Raspberry Pi OS のデフォルトユーザの認証情報ですが、現行の Raspberry Pi OS では利用できないようになっているのでご注意ください。[^1]
+
+[^1]: [An update to Raspberry Pi OS Bullseye - Raspberry Pi](https://www.raspberrypi.com/news/raspberry-pi-bullseye-update-april-2022/)
+
+この Playbook は次のように動きます。
+
+1. `my_poweruser` というユーザと `my_poweruser_password` というパスワードで `my_host.example.com` に接続します。
+2. 1.の接続に失敗した場合、 `power_default_*` の認証情報を利用して `my_poweruser` を作成します。上記例の場合は `pi` というユーザと `raspberry` というパスワードで `my_host.example.com` に接続し、 `my_poweruser` を作成します。
+3. 以降の Playbook では `my_poweruser` というユーザを利用して `my_host.example.com` に接続します。
 
 ## Authors
 
