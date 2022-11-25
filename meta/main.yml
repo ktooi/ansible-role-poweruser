@@ -4,7 +4,7 @@ dependencies: []
 galaxy_info:
   role_name: poweruser
   author: ktooi
-  description: Try to connect to host, and create ansible_user if could not connect to host.
+  description: Create ansible_user if could not connect to the host with ansible_user.
   license: "license (MIT)"
   min_ansible_version: 2.0
   platforms:
