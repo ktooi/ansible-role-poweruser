@@ -82,6 +82,9 @@ ansible_ssh_pass: my_poweruser_password
 2. 1.の接続に失敗した場合、 `poweruser_default_*` の認証情報を利用して `my_poweruser` を作成します。上記例の場合は `pi` というユーザと `raspberry` というパスワードで `my_host.example.com` に接続し、 `my_poweruser` を作成します。
 3. 以降の Playbook では `my_poweruser` というユーザを利用して `my_host.example.com` に接続します。
 
+## Example usage
+
+
 ## Authors
 
 * **Kodai Tooi** [GitHub](https://github.com/ktooi), [Qiita](https://qiita.com/ktooi)

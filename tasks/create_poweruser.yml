@@ -10,12 +10,12 @@
   # restore facts task を実行してはならなくなり、それによりこの backup facts task を実行する必要がなくなるのでスキップする。
   when: not ansible_check_mode
 
-# デフォルト値の ansible_user を利用する場合、 "set ansible_user" タスクを実行する前に値を代入して確定しておく必要がある。
+# デフォルト値 (defaults/main.yml の値) を利用する場合、 ansible_user の値を変更する前に poweruser_name の値を確定しておく必要がある。
 - name: ensure poweruser_name
   set_fact:
     poweruser_name: "{{ poweruser_name }}"
 
-# デフォルト値の ansible_ssh_pass または ansible_become_pass を利用する場合、 "set ansible_*" タスクを実行する前に値を代入して確定しておく必要がある。
+# デフォルト値 (defaults/main.yml の値) を利用する場合、 ansible_ssh_pass や ansible_become_pass の値を変更する前に poweruser_password の値を確定しておく必要がある。
 - name: ensure poweruser_password
   set_fact:
     poweruser_password: "{{ poweruser_password }}"
